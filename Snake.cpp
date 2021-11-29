@@ -1,7 +1,9 @@
 #include "Snake.h"
+#include "windows_console.h"
+#include <iostream>
 
 Snake::Snake(int _bodyParts) {
-	for (int i = 0; i < _bodyParts; i++) {
+	for (int i = 0; i < _bodyParts + 1; i++) {
 		snakeBody.push_back(Body());
 		if (i != 0) {
 			snakeBody[i].position._componentX = snakeBody[i - 1].position._componentX - 1;
@@ -16,6 +18,8 @@ Snake::Snake(int _bodyParts) {
 	snakeBody[_bodyParts - 1].sprite = '<';
 }
 
+
+
 void Snake::move() {
 
 	for (int i = 0; i < snakeBody.size(); i++) {
@@ -27,7 +31,4 @@ void Snake::move() {
 			snakeBody[i].direction = snakeBody[i - 1].position - snakeBody[i].position;
 		}
 	}
-
-	
-
 }
