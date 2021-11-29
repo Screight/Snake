@@ -1,7 +1,7 @@
 #include "Collision.h"
 #include "Globals.h"
 
-void spawnHappyFace(const Snake& snake, std::vector<Vector2D>& happyFaces) {
+void spawnHappyFace(const Snake& snake, std::vector<Vector2D>& happyFaces, const std::vector<Vector2D>& walls) {
 
 	char happyFace = static_cast<char>(1);
 
@@ -10,23 +10,41 @@ void spawnHappyFace(const Snake& snake, std::vector<Vector2D>& happyFaces) {
 	bool collides = true;
 
 	while (collides) {
-		int i = 0;
-		while (i < snake.snakeBody.size()) {
-			if (snake.snakeBody[i].position == position) {
+
+		for (int i = 0; i < walls.size(); i++) {
+
+			if (position != walls[i]) {
+				collides = false;
+				break;
+			}
+			else {
 				position = Vector2D::random(Vector2D(MAP_INITIAL_X_POSITION, MAP_SIZE_X), Vector2D(MAP_INITIAL_Y_POSITION, MAP_SIZE_Y));
 				break;
 			}
-			i++;
 		}
-		if (i == snake.snakeBody.size()) {
-			collides = false;
+
+		if (!collides) {
+			for (int j = 0; j < snake.snakeBody.size() - 2; j++) {
+
+				if (position != snake.snakeBody[j].position) {
+					break;
+				}
+				else {
+					position = Vector2D::random(Vector2D(MAP_INITIAL_X_POSITION, MAP_SIZE_X), Vector2D(MAP_INITIAL_Y_POSITION, MAP_SIZE_Y));
+					collides = true;
+					break;
+				}
+
+			}
 		}
+		
+
 	}
 
 	happyFaces.push_back(position);
 }
 
-int collides(Vector2D mainObject, const std::vector<Vector2D> objectsToCollideWith)
+int collides(const Vector2D& mainObject, const std::vector<Vector2D>& objectsToCollideWith)
 {
 
 	for (int i = 0; i < objectsToCollideWith.size(); i++) {
@@ -38,13 +56,21 @@ int collides(Vector2D mainObject, const std::vector<Vector2D> objectsToCollideWi
 	return -1;
 }
 
+void collidesBody(const Snake& snake) {
+	for (int i = 1; i < snake.snakeBody.size() - 1; i++) {
+		if (snake.snakeBody[0].position == snake.snakeBody[i].position) {
+			playing = false;
+		}
+	}
+}
+
 void collidesWalls(Snake snake, std::vector<Vector2D> walls) {
 	if (collides(snake.snakeBody[0].position, walls) != -1) {
 		playing = false;
 	}
 }
 
-void collidesHappyFace(Snake& snake, std::vector<Vector2D>& happyFaces) {
+void collidesHappyFace(Snake& snake, std::vector<Vector2D>& happyFaces, std::vector<Vector2D>& walls) {
 	if (collides(snake.snakeBody[0].position, happyFaces) != -1) {
 
 		int index = collides(snake.snakeBody[0].position, happyFaces);
@@ -71,9 +97,9 @@ void collidesHappyFace(Snake& snake, std::vector<Vector2D>& happyFaces) {
 
 		snake.snakeBody[snake.snakeBody.size() - 2].sprite = 'o';
 
-		spawnHappyFace(snake, happyFaces);
+		spawnHappyFace(snake, happyFaces, walls);
 		if (speed > 50) {
-			speed -= 10;
+			speed -= 5;
 		}
 
 	}
@@ -82,6 +108,7 @@ void collidesHappyFace(Snake& snake, std::vector<Vector2D>& happyFaces) {
 
 void UpdateLogicAndPhysics(Snake& snake, std::vector<Vector2D>& happyFaces, std::vector<Vector2D>& walls) {
 	collidesWalls(snake,walls);
-	collidesHappyFace(snake, happyFaces);
+	collidesBody(snake);
+	collidesHappyFace(snake, happyFaces, walls);
 	snake.move();
 }

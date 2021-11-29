@@ -7,4 +7,6 @@
 
 void Render(const std::vector<Vector2D>& happyFaces, const std::vector<Vector2D>& walls, const Snake& snake);
 
+void renderMap(std::vector<Vector2D> walls);
+
 #endif // !RENDER_H

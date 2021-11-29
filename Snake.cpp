@@ -1,4 +1,5 @@
 #include "Snake.h"
+#include "Globals.h"
 #include "windows_console.h"
 #include <iostream>
 
@@ -9,11 +10,11 @@ Snake::Snake(int _bodyParts) {
 			snakeBody[i].position._componentX = snakeBody[i - 1].position._componentX - 1;
 		}
 		else {
-			snakeBody[i].position._componentX = 8;
+			snakeBody[i].position._componentX = MAP_INITIAL_X_POSITION + 8;
 			snakeBody[i].sprite = static_cast<char>(1);
 			snakeBody[i].direction._componentX = 1;
 		}
-		snakeBody[i].position._componentY = 5;
+		snakeBody[i].position._componentY = MAP_INITIAL_Y_POSITION + 5;
 	}
 	snakeBody[_bodyParts - 1].sprite = '<';
 }

@@ -49,9 +49,8 @@ bool operator==(Vector2D vector_1, Vector2D vector_2) {
 
 bool operator!=(Vector2D vector_1, Vector2D vector_2) {
 
-	bool _compareX = vector_1._componentX == vector_2._componentX;
-	bool _compareY = vector_1._componentY == vector_2._componentY;
-	if (_compareX && _compareY) {
+	bool _compare = vector_1 == vector_2;
+	if (_compare) {
 		return false;
 	}
 	else {
